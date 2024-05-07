@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { Box, Button, Typography } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { Login } from "../login/Login";
+import { useState } from "react";
 
 const MainBox = styled(Box)({
   display: "flex",
@@ -26,18 +28,25 @@ const LoginButton = styled(Button)({
 
 })
 export function CustomeButton() {
+  const [open, setOpen] =useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+};
   return (
     <>
       <MainBox>
-        <LoginButton variant="contained">Login</LoginButton>
+        <LoginButton variant="contained" onClick={()=>handleOpen()}>Login</LoginButton>
         <Typography style={{marginTop:'3px',width:'135px'}}>Seller</Typography>
         <Typography  style={{marginTop:'3px',width:'135px'}}>More</Typography>
 
         <Box style={{display:'flex'}}>
           <ShoppingCartOutlinedIcon />
           <Typography>Cart</Typography>
+          <Login open={open} setOpen={setOpen}/>
         </Box>
       </MainBox>
+
     </>
   );
 }

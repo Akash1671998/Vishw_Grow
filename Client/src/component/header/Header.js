@@ -6,7 +6,7 @@ import { Search } from "./Search";
 import { CustomeButton } from "./CustomeButton";
 
 const HeaderStyle = styled(AppBar)({
-  background: "#3f51b5",
+  background: "#009688",
   position: "static",
   height: "75px",
 });
@@ -25,10 +25,10 @@ export function Header() {
       <HeaderStyle>
         <Toolbar>
           <Component>
-            <img src={Icon} alt="logo" style={{ width: "55px" }} />
+            <img src={Icon} alt="logo" style={{ width: "55px", marginTop:'15px' }} />
             <Box>
-              <Typography style={{ fontSize: "15px", fontStyle: "italic" }}>
-                Explore &nbsp;
+              <Typography style={{ fontSize: "15px", fontStyle: "italic", display:'flex'}}>
+                Explore &nbsp;&nbsp;
                 <Typography component="span" style={{ color: "#FFE500" }}>
                   More
                 </Typography>
