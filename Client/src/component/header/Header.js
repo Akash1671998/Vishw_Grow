@@ -6,7 +6,7 @@ import { Search } from "./Search";
 import { CustomeButton } from "./CustomeButton";
 
 const HeaderStyle = styled(AppBar)({
-  background: "#009688",
+  background: "#4caf50",
   position: "static",
   height: "75px",
 });
