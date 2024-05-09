@@ -1,10 +1,11 @@
 import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useState } from "react";
+import { authenticatedSignup } from "../services/Services";
 
 const MainBox = styled(Box)({
   display: "flex",
-  height: "70vh",
+  height: "80vh",
   width: "90vh",
   padding: "0",
   paddingTop: "0",
@@ -12,20 +13,21 @@ const MainBox = styled(Box)({
 
 const Images = styled(Box)({
   background: "#009688",
-  width: "78px",
-  height: "100%",
+  width: "98px",
+  height: "90%",
   padding: "55px 55px",
-  '& > p , & > h5':{
-    color:'#fff',
-    fontWeight:'600'
-  }
+  alignItems: "center",
+  "& > p , & > h5": {
+    color: "#fff",
+    fontWeight: "600",
+  },
 });
 
 const Wrapper = styled(Box)({
   padding: "25px 35px",
   display: "flex",
   flex: "1",
-  overflow: "auto",
+  //   overflow: "auto",
   flexDirection: "column",
   "& > div , & > button , & > p ": {
     marginTop: "20px",
@@ -37,43 +39,72 @@ const LoginButton = styled(Button)({
   color: "red",
   height: "35px",
   borderRadius: "2px",
-  boxShadow:'0 2px 4px 0'
+  boxShadow: "0 2px 4px 0",
 });
 
 const RequestOTP = styled(Button)({
-    textTransform:'none',
-    background:'#009688',
-    color:'red',
-    height:'35px',
-    borderRadius:'2px',
-    boxShadow:'0 2px 4px 0'
+  textTransform: "none",
+  background: "#009688",
+  color: "red",
+  height: "35px",
+  borderRadius: "2px",
+  boxShadow: "0 2px 4px 0",
+});
 
-})
-   
 const CreateAccount = styled(Typography)({
-    textAlign:'center',
-    color:'#2874f0',
-    fontWeight:'600',
-    fontSize:'14px',
-    cursor:'pointer',
-})
-   // margin: auto 0 5px 0;
-  
+  textAlign: "center",
+  color: "#2874f0",
+  fontWeight: "600",
+  fontSize: "14px",
+  cursor: "pointer",
+});
+// margin: auto 0 5px 0;
 
-   const loginDefaultValue ={
-    login:{
-        view:'/login'
-    },
-    signup:{
-        view:'/signup'
-    }
-   }
+const loginDefaultValue = {
+  login: {
+    view: "/login",
+    heding: "Login User",
+    subheading: " Get Access To Your Order",
+  },
+  signup: {
+    view: "/signup",
+    heding: "Signup User",
+    subheading: "  Create a new account for New User",
+  },
+};
+
+const signupInitialValues = {
+  firstname: "",
+  lastname: "",
+  username: "",
+  email: "",
+  password: "",
+  phone: "",
+};
 export function Login({ open, setOpen }) {
-    const [login,setlogin]=useState(loginDefaultValue.login)
+  const [login, setlogin] = useState(loginDefaultValue.login);
+  const [signupUser, setSignupUser] = useState(signupInitialValues);
+
   const handleClose = () => {
     setOpen(false);
+    setlogin(loginDefaultValue.login);
   };
 
+  const signup = () => {
+    setlogin(loginDefaultValue.signup);
+  };
+
+  const MoveToLogin = () => {
+    setlogin(loginDefaultValue.login);
+  };
+
+  const handleSignup = (e) => {
+    setSignupUser({ ...signupUser, [e.target.name]: e.target.value });
+  };
+
+  const createUser = async () => {
+    await authenticatedSignup(signupUser);
+  };
   return (
     <>
       <Dialog
@@ -81,64 +112,92 @@ export function Login({ open, setOpen }) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        PaperProps={{sx:{maxWidth:'unset'}}}
+        PaperProps={{ sx: { maxWidth: "unset" } }}
       >
         <MainBox>
           <Box style={{ display: "flex", height: "100%" }}>
-            <Images>
-              <Typography variant="h5">Login</Typography>
-              <Typography style={{ marginTop: 10 }}>
-                Get Access To Your Order
-              </Typography>
-            </Images>
-{login.view=== '/login' ?
-            <Wrapper>
-              <TextField id="name" label="Enter Number" variant="standard" />
-              <TextField
-                id="password"
-                label="Enter Password"
-                variant="standard"
-              />
-              <Typography style={{fontSize:'12px' ,color:'#878787'}}>
-                By continuing, you agree to Terms of Use and Privacy Policy.
-              </Typography>
+            {login.view === "/login" ? (
+              <Images>
+                <Typography variant="h5">{login.heding}</Typography>
+                <Typography style={{ marginTop: 10 }}>
+                  {login.subheading}
+                </Typography>
+              </Images>
+            ) : (
+              <Images>
+                <Typography variant="h5">
+                  {loginDefaultValue.signup.heding}
+                </Typography>
+                <Typography style={{ marginTop: 10 }}>
+                  {loginDefaultValue.signup.subheading}
+                </Typography>
+                {/* <img src={Createaccount} alt="create_account"  style={{width:'100px' ,height:'90px'}}/> */}
+              </Images>
+            )}
 
-              <LoginButton>Login</LoginButton>
-              <Typography style={{textAlign:'center'}}>Or</Typography>
-              <RequestOTP>Request OTP</RequestOTP>
-              <CreateAccount>New To Create an Account</CreateAccount>
-            </Wrapper> : 
-            <Wrapper>
-              <TextField id="firstname" label="Enter First Name" variant="standard" />
-              <TextField
-                id="lastname"
-                label="Enter Last Name"
-                variant="standard"
-              />
-              <TextField id="name" label="User Name" variant="standard" />
-              <TextField
-                id="username"
-                label="Enter User Email"
-                variant="standard"
-              />
-               <TextField
-                id="email"
-                label="Enter User Email"
-                variant="standard"
-              />
-              <TextField
-                id="password"
-                label="Enter Password"
-                variant="standard"
-              />
-              <TextField
-                id="phone"
-                label="Enter Phone"
-                variant="standard"
-              />
- <LoginButton>Continue</LoginButton>
-            </Wrapper>
-             }
+            {login.view === "/login" ? (
+              <Wrapper>
+                <TextField id="name" label="Enter Number" variant="standard" />
+                <TextField
+                  id="password"
+                  label="Enter Password"
+                  variant="standard"
+                />
+                <Typography style={{ fontSize: "12px", color: "#878787" }}>
+                  By continuing, you agree to Terms of Use and Privacy Policy.
+                </Typography>
+
+                <LoginButton>Login</LoginButton>
+                <Typography style={{ textAlign: "center" }}>Or</Typography>
+                <RequestOTP>Request OTP</RequestOTP>
+                <CreateAccount onClick={() => signup()}>
+                  New To Create an Account
+                </CreateAccount>
+              </Wrapper>
+            ) : (
+              <Wrapper>
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="firstname"
+                  label="Enter Firstname"
+                />
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="lastname"
+                  label="Enter Lastname"
+                />
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="username"
+                  label="Enter Username"
+                />
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="email"
+                  label="Enter Email"
+                />
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="password"
+                  label="Enter Password"
+                />
+                <TextField
+                  variant="standard"
+                  onChange={(e) => handleSignup(e)}
+                  name="phone"
+                  label="Enter Phone"
+                />
+                <LoginButton onClick={() => createUser()}>Continue</LoginButton>
+                <CreateAccount onClick={() => MoveToLogin()}>
+                  Existing User? Log in
+                </CreateAccount>
+              </Wrapper>
+            )}
           </Box>
         </MainBox>
       </Dialog>
