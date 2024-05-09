@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { EcommerceProvider } from './contex/contex';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <EcommerceProvider>
     <App />
+    </EcommerceProvider>
+    
   </React.StrictMode>
 );
 

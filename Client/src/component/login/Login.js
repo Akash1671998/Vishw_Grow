@@ -1,7 +1,8 @@
 import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import { useState } from "react";
-import { authenticatedSignup } from "../services/Services";
+import { authenticatedSignin, authenticatedSignup } from "../services/Services";
+import { useEcommerceContexController, setAccount } from "../../contex/contex";
 
 const MainBox = styled(Box)({
   display: "flex",
@@ -81,9 +82,17 @@ const signupInitialValues = {
   password: "",
   phone: "",
 };
+
+const loginInitialValues = {
+  username: "",
+  password: "",
+};
 export function Login({ open, setOpen }) {
+  const [controller, dispatch] = useEcommerceContexController();
+  const { darkMode } = controller;
   const [login, setlogin] = useState(loginDefaultValue.login);
   const [signupUser, setSignupUser] = useState(signupInitialValues);
+  const [loguser, setLogUser] = useState(loginInitialValues);
 
   const handleClose = () => {
     setOpen(false);
@@ -103,7 +112,24 @@ export function Login({ open, setOpen }) {
   };
 
   const createUser = async () => {
-    await authenticatedSignup(signupUser);
+    let response = await authenticatedSignup(signupUser);
+    if (response) {
+      setAccount(dispatch, signupUser.firstname);
+      setSignupUser("");
+      setOpen(false);
+    }
+  };
+
+  const handleLogin = (e) => {
+    setLogUser({ ...loguser, [e.target.name]: e.target.value });
+  };
+  const loginuser = async () => {
+    const response = await authenticatedSignin(loguser);
+    if (response.status === 200) {
+      setAccount(dispatch, response.data.data.firstname);
+      setOpen(false);
+      setLogUser();
+    }
   };
   return (
     <>
@@ -137,17 +163,23 @@ export function Login({ open, setOpen }) {
 
             {login.view === "/login" ? (
               <Wrapper>
-                <TextField id="name" label="Enter Number" variant="standard" />
                 <TextField
-                  id="password"
+                  name="username"
+                  label="Enter UserName"
+                  variant="standard"
+                  onChange={(e) => handleLogin(e)}
+                />
+                <TextField
+                  name="password"
                   label="Enter Password"
                   variant="standard"
+                  onChange={(e) => handleLogin(e)}
                 />
                 <Typography style={{ fontSize: "12px", color: "#878787" }}>
                   By continuing, you agree to Terms of Use and Privacy Policy.
                 </Typography>
 
-                <LoginButton>Login</LoginButton>
+                <LoginButton onClick={() => loginuser()}> Login</LoginButton>
                 <Typography style={{ textAlign: "center" }}>Or</Typography>
                 <RequestOTP>Request OTP</RequestOTP>
                 <CreateAccount onClick={() => signup()}>
