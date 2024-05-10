@@ -20,3 +20,12 @@ try {
   return error.responce
 }
 };
+
+export const getProduct = async(data) => {
+  try {
+   return await  axios.post(`${URL}/getproducts`, data);
+  } catch (error) {
+    console.log("Error While Login a User",error);
+    return error.responce
+  }
+  };

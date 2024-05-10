@@ -4,12 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { EcommerceProvider } from './contex/contex';
+import {Provider} from 'react-redux';
+import Store from './redux/Store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <EcommerceProvider>
+      <Provider Store={Store}>
     <App />
+    </Provider>
     </EcommerceProvider>
     
   </React.StrictMode>
