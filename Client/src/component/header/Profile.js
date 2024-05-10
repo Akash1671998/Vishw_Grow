@@ -2,49 +2,64 @@ import { Box, Menu, MenuItem, Typography } from "@mui/material";
 import { setAccount, useEcommerceContexController } from "../../contex/contex";
 import { useState } from "react";
 import styled from "@emotion/styled";
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-
-
+import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 
 const MenuComponent = styled(Menu)({
-    marginTop:'5px',
-})
+  marginTop: "25px",
+});
 
 export function Profile({ account }) {
   const [controller, dispatch] = useEcommerceContexController();
   const { darkMode } = controller;
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleOpen = (event) => {
-    setOpen(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setAnchorEl(false);
   };
 
-  const logout=()=>{
-    setAccount("");
-  }
+  const logout = () => {
+    setAccount(dispatch, "");
+  };
   return (
     <>
-      <Box onClick={() => handleOpen()}>
-        <Typography style={{ marginTop: "2px", cursor:'pointer' }}>
+      <Box
+        onClick={(e) => handleOpen(e)}
+        aria-controls={open ? "basic-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+      >
+        <Typography style={{ marginTop: "2px", cursor: "pointer" }}>
           {account}
         </Typography>
       </Box>
+
       <MenuComponent
         id="basic-menu"
-        // anchorEl={anchorEl}
-        open={Boolean(open)}
+        anchorEl={anchorEl}
+        open={open}
+        // open={Boolean(open)}
         onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
       >
-        <MenuItem onClick={()=>{handleClose();logout();}}>
-        <PowerSettingsNewIcon color="action" fontSize="small"/>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            logout();
+          }}
+        >
+          <PowerSettingsNewIcon color="action" fontSize="small" />
 
-            <Typography style={{fontSize:'14px',marginLeft:'20px'}}>Logout</Typography>
+          <Typography style={{ fontSize: "14px", marginLeft: "20px" }}>
+            Logout
+          </Typography>
         </MenuItem>
-       
       </MenuComponent>
     </>
   );

@@ -74,6 +74,13 @@ const loginDefaultValue = {
   },
 };
 
+const ShowError = styled(Typography)({
+  fontSize: "10px",
+  color: "#ff6161",
+  marginTop: "10px",
+  fontWeight: "600",
+});
+
 const signupInitialValues = {
   firstname: "",
   lastname: "",
@@ -93,6 +100,7 @@ export function Login({ open, setOpen }) {
   const [login, setlogin] = useState(loginDefaultValue.login);
   const [signupUser, setSignupUser] = useState(signupInitialValues);
   const [loguser, setLogUser] = useState(loginInitialValues);
+  const [error, setError] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -125,10 +133,12 @@ export function Login({ open, setOpen }) {
   };
   const loginuser = async () => {
     const response = await authenticatedSignin(loguser);
-    if (response.status === 200) {
-      setAccount(dispatch, response.data.data.firstname);
-      setOpen(false);
-      setLogUser();
+    if (!response) {
+      setError(true);
+    } else {
+      setError(false);
+      handleClose();
+      setAccount(dispatch, response.data.data.username);
     }
   };
   return (
@@ -169,6 +179,9 @@ export function Login({ open, setOpen }) {
                   variant="standard"
                   onChange={(e) => handleLogin(e)}
                 />
+                {error && (
+                  <ShowError>Please Enter Valid UserName & Password</ShowError>
+                )}
                 <TextField
                   name="password"
                   label="Enter Password"

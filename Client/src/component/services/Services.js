@@ -16,6 +16,7 @@ export const authenticatedSignin = async(data) => {
 try {
  return await  axios.post(`${URL}/signin`, data);
 } catch (error) {
-  console.log("Error While Login a User",error.message);
+  console.log("Error While Login a User",error);
+  return error.responce
 }
 };
